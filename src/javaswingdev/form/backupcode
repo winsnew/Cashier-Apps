@@ -1,0 +1,74 @@
+private void tambahMouseClicked(java.awt.event.MouseEvent evt) {                                    
+        if (status.equals("")) {
+        if (jumlah.getText().equals("") || jumlah.getText().equals("") || nama.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "Pilih dan Masukan jumlah makanan!");
+        } else {
+            try {
+                st = cn.createStatement();
+                rs = st.executeQuery("select * from tbl_menu where id_menu='"
+                        + tabmodel.getValueAt(tabelbarang.getSelectedRow(), 0).toString() + "'");
+                if (rs.next()) {
+                    int satuanMenu = rs.getInt("satuan_menu");
+                    int jumlahBarang = Integer.parseInt(jumlah.getText());
+
+                    if (satuanMenu <= jumlahBarang) {
+                        // Get harga from the database as decimal
+                       // Check if the menu is already in tmp_transaksi
+                        
+                        BigDecimal hargaBarang = rs.getBigDecimal("harga_menu");
+                        BigDecimal jumlahBarangDecimal = BigDecimal.valueOf(jumlahBarang);
+
+                        // Calculate total as decimal
+                        BigDecimal total = hargaBarang.multiply(jumlahBarangDecimal);
+
+                        // Insert into tmp_transaksi table
+                        st = cn.createStatement();
+                        st.executeUpdate("insert into tmp_transaksi (no, nama_menu, harga, jumlah, total) "
+                                + "values('" + kode_bar.getText() + "','" + nama.getText() + "',"
+                                + "'" + hargaBarang + "',"
+                                + "'" + jumlahBarang + "',"
+                                + "'" + total + "')");
+
+                        tampiltmp();
+                        tampil();
+                        total_tmp();
+                        nama.setText("");
+                        harga.setText(BigDecimal.ZERO.toString());
+                        jumlah.setText("");
+                        subtotal.setText(BigDecimal.ZERO.toString());
+                        
+                    } else {
+                        // Get harga from the database as decimal
+                        BigDecimal hargaBarang = rs.getBigDecimal("harga_menu");
+                        BigDecimal jumlahBarangDecimal = BigDecimal.valueOf(jumlahBarang);
+
+                        // Calculate total as decimal
+                        BigDecimal total = hargaBarang.multiply(jumlahBarangDecimal);
+
+                        // Insert into tmp_transaksi table
+                        st = cn.createStatement();
+                        st.executeUpdate("insert into tmp_transaksi (no, nama_menu, harga, jumlah, total) "
+                                + "values('" + kode_bar.getText() + "','" + nama.getText() + "',"
+                                + "'" + hargaBarang + "',"
+                                + "'" + jumlahBarang + "',"
+                                + "'" + total + "')");
+
+                        tampiltmp();
+                        tampil();
+                        total_tmp();
+                        nama.setText("");
+                        harga.setText(BigDecimal.ZERO.toString());
+                        jumlah.setText("");
+                        subtotal.setText(BigDecimal.ZERO.toString());
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Data tidak ditemukan");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    } else {
+        // Rest of your code for the else condition
+    }
+    }
